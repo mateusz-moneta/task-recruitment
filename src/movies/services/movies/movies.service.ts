@@ -45,14 +45,24 @@ export class MoviesService {
 
   searchMovie(findMovieDto: FindMovieDto): MovieDto {
     if (findMovieDto.duration && findMovieDto.genres) {
-      return getRandomElements<MovieDto>(this.movies, 1)[0];
+      const { duration } = findMovieDto;
+      const movies = this.movies.filter(
+        ({ genres, runtime }) =>
+          !!genres.filter((nestedGenre: string) =>
+            findMovieDto.genres.some((genre: string) => nestedGenre === genre)
+          ).length &&
+          runtime >= duration - 10 &&
+          runtime <= duration + 10
+      );
+
+      return movies.length ? getRandomElements<MovieDto>(movies, 1)[0] : null;
     }
 
     if (findMovieDto.duration) {
+      const { duration } = findMovieDto;
       const movies = this.movies.filter(
-        (movie: MovieDto) =>
-          +movie.runtime >= findMovieDto.duration - 10 &&
-          +movie.runtime <= findMovieDto.duration + 10
+        ({ runtime }: MovieDto) =>
+          runtime >= duration - 10 && runtime <= duration + 10
       );
 
       return movies.length ? getRandomElements<MovieDto>(movies, 1)[0] : null;

@@ -1,4 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import { Type } from 'class-transformer';
 import { IsArray, IsNumber, IsOptional } from 'class-validator';
 
 export class FindMovieDto {
@@ -10,5 +11,6 @@ export class FindMovieDto {
   @ApiModelProperty({ type: Number })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   duration: number;
 }
