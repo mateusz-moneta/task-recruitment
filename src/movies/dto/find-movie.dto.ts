@@ -6,11 +6,11 @@ export class FindMovieDto {
   @ApiModelProperty({ type: String, isArray: true })
   @IsOptional()
   @IsArray()
-  genres: string[];
+  genres?: string[];
 
   @ApiModelProperty({ type: Number })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  duration: number;
+  duration?: number;
 }

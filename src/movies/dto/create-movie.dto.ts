@@ -17,7 +17,7 @@ export class CreateMovieDto {
   @MaxLength(255)
   title: string;
 
-  @ApiModelProperty({ type: String })
+  @ApiModelProperty({ type: Number })
   @IsNumber()
   @Type(() => Number)
   year: number;

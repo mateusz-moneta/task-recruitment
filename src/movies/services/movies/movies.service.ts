@@ -9,14 +9,15 @@ import { MovieDto } from '../../dto/movie.dto';
 
 @Injectable()
 export class MoviesService {
-  private readonly database: Database;
+  database: Database;
+
   private readonly path: string = './data/db.json';
 
-  private get movies(): MovieDto[] {
+  get movies(): MovieDto[] {
     return this.database.movies;
   }
 
-  private set movies(movies: MovieDto[]) {
+  set movies(movies: MovieDto[]) {
     this.database.movies = movies;
   }
 
@@ -25,8 +26,7 @@ export class MoviesService {
   }
 
   constructor() {
-    const databaseFile = fs.readFileSync(this.path, 'utf8');
-    this.database = JSON.parse(databaseFile);
+    this.readFile();
   }
 
   createMovie(createMovieDto: CreateMovieDto): MovieDto {
@@ -38,7 +38,11 @@ export class MoviesService {
 
     this.movies = [...this.movies, newMovie];
 
-    fs.writeFileSync(this.path, JSON.stringify(this.database));
+    try {
+      fs.writeFileSync(this.path, JSON.stringify(this.database));
+    } catch (error) {
+      console.error(error);
+    }
 
     return newMovie;
   }
@@ -80,5 +84,14 @@ export class MoviesService {
     }
 
     return getRandomElements<MovieDto>(this.movies, 1)[0];
+  }
+
+  private readFile(): void {
+    try {
+      const databaseFile = fs.readFileSync(this.path, 'utf8');
+      this.database = JSON.parse(databaseFile);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
